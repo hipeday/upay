@@ -1,0 +1,12 @@
+database:
+  mysql:
+    host: 127.0.0.1
+    port: 3306
+    username: your_user
+    password: your_password
+    database: upay
+server:
+  port: 3000
+  ip: 0.0.0.0
+  # check gin mode (debug | release | test)
+  mode: debug
