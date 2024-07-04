@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/hipeday/upay/internal/middleware"
 	"github.com/hipeday/upay/internal/service"
 	"github.com/hipeday/upay/pkg/config"
 	"github.com/jmoiron/sqlx"
@@ -17,6 +18,7 @@ type Route interface {
 func SetupRouter(db *sqlx.DB, cfg config.Config) {
 	gin.SetMode(cfg.Server.Mode)
 	engine := gin.New()
+	engine.Use(middleware.ErrorMiddleware())
 	setup(db, engine)
 	err := engine.Run(cfg.Server.IP + ":" + strconv.Itoa(int(cfg.Server.Port)))
 	if err != nil {

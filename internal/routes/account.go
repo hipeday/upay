@@ -2,8 +2,9 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/hipeday/upay/internal/logging"
+	"github.com/hipeday/upay/internal/errors"
 	"github.com/hipeday/upay/internal/repository"
+	"github.com/hipeday/upay/internal/routes/request"
 	"github.com/hipeday/upay/internal/service"
 	"github.com/jmoiron/sqlx"
 )
@@ -25,7 +26,8 @@ func setupAccount(db *sqlx.DB, engine *gin.Engine) {
 }
 
 func (a AccountRoute) Register(engine *gin.Engine, middlewares ...gin.HandlerFunc) {
-	engine.GET(signin, a.signIn)
+	whitelist := engine.Group("", middlewares...)
+	whitelist.POST(signin, a.signIn)
 }
 
 func (a AccountRoute) Setup(service service.Service) {
@@ -34,6 +36,15 @@ func (a AccountRoute) Setup(service service.Service) {
 
 // signIn 登录
 func (a AccountRoute) signIn(c *gin.Context) {
-	logger := logging.Logger()
-	logger.Info("Welcome to the Internet Web App")
+	var (
+		payload request.SignInPayload
+	)
+
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		panic(errors.NewIllegalArgumentError(err.Error()))
+	}
+
+	if err := payload.Validate(); err != nil {
+		panic(errors.NewIllegalArgumentError(err.Error()))
+	}
 }
