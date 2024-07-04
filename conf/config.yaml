@@ -10,3 +10,8 @@ server:
   ip: 0.0.0.0
   # check gin mode (debug | release | test)
   mode: debug
+logger:
+  level: info
+  encoding: console
+  colors: true
+  time_format: 2006-01-02 15:04:05.000

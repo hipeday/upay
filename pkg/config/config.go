@@ -14,6 +14,7 @@ import (
 type Config struct {
 	Database *Database `yaml:"database"`
 	Server   *Server   `yaml:"server"`
+	Logger   *Logging  `yaml:"logger"`
 }
 
 type Database struct {
@@ -32,6 +33,20 @@ type Server struct {
 	IP   string `yaml:"ip"`
 	Port int16  `yaml:"port"`
 	Mode string `yaml:"mode"`
+}
+
+type Logging struct {
+	// Encoding can be one "json" or "console". Defaults to "console"
+	Encoding string `yaml:"encoding"`
+
+	// Level configures the log level
+	Level string `yaml:"level"`
+
+	// Colors configures if color output should be enabled
+	Colors *bool `yaml:"colors"`
+
+	// time format
+	TimeFormat string `yaml:"time_format"`
 }
 
 var (

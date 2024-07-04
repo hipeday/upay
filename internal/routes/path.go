@@ -12,3 +12,8 @@ const ()
 const (
 	order = "/order"
 )
+
+// account routing paths
+const (
+	signin = "/signin"
+)

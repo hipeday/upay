@@ -2,8 +2,8 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/hipeday/upay/config"
 	"github.com/hipeday/upay/internal/service"
+	"github.com/hipeday/upay/pkg/config"
 	"github.com/jmoiron/sqlx"
 	"log"
 	"strconv"

@@ -3,7 +3,7 @@ package repository
 import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/hipeday/upay/config"
+	"github.com/hipeday/upay/pkg/config"
 	"github.com/jmoiron/sqlx"
 )
 
