@@ -1,27 +1,30 @@
 package repository
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
+	"github.com/hipeday/upay/internal/entities"
 	"github.com/jmoiron/sqlx"
 )
 
-type AccountRepository struct {
+type AccountRepositoryImpl struct {
 	db *sqlx.DB
 }
 
-func (a AccountRepository) Setup(db *sqlx.DB) {
+func (a *AccountRepositoryImpl) Setup(db *sqlx.DB) {
 	a.db = db
 }
 
-func (a AccountRepository) TableName() string {
+func (a *AccountRepositoryImpl) TableName() string {
 	return "account"
 }
 
-func (a AccountRepository) Columns() []string {
-	return []string{"id", "username", "password", "status", "token", "refresh_token", "create_at"}
+func (a *AccountRepositoryImpl) Columns() []string {
+	return []string{"id", "username", "password", "status", "secret", "create_at"}
 }
 
-func (a AccountRepository) Columns2Query() string {
+func (a *AccountRepositoryImpl) Columns2Query() string {
 	columns := a.Columns()
 	var columns2Query string
 	for i, column := range columns {
@@ -32,4 +35,30 @@ func (a AccountRepository) Columns2Query() string {
 		}
 	}
 	return columns2Query
+}
+
+func (a *AccountRepositoryImpl) SelectAccountByUsername(username string) (*entities.Account, error) {
+	var account entities.Account
+	query := fmt.Sprintf("SELECT %s FROM %s WHERE username = ?", a.Columns2Query(), a.TableName())
+	err := a.db.Get(&account, query, username)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &account, nil
+}
+
+func (a *AccountRepositoryImpl) SelectSignIn(username string, password string) (*entities.Account, error) {
+	var account entities.Account
+	query := fmt.Sprintf("SELECT %s FROM %s WHERE username = ? AND password = ?", a.Columns2Query(), a.TableName())
+	err := a.db.Get(&account, query, username, password)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &account, nil
 }

@@ -12,7 +12,7 @@ import (
 
 type Route interface {
 	Register(engine *gin.Engine, middlewares ...gin.HandlerFunc)
-	Setup(service *service.Service)
+	Setup(service service.Service)
 }
 
 func SetupRouter(db *sqlx.DB, cfg config.Config) {

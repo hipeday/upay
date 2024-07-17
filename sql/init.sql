@@ -7,10 +7,12 @@ create table account(
     username varchar(32) not null comment '登录用户名',
     password varchar(128) not null comment '登录密码',
     status varchar(16) not null default 'created' comment '用户状态：active, suspended, closed, pending, locked, deleted',
-    token text default null comment '用户当前Token',
-    refresh_token text default null comment '用户刷新Token',
+    secret varchar(8) not null comment '用户密码加密盐值(8位任意值)',
     create_at datetime default now() not null comment '创建时间'
 ) comment '后台账户表';
+
+# 初始管理员账号密码 admin 123456
+insert into account (id, username, password, status, secret, create_at) values (null, 'admin', '39ae1deda52c5e399b5c2697689af504', 'created', 'GnYchJd4', now());
 
 create table settings(
     id bigint primary key auto_increment comment '主键id',

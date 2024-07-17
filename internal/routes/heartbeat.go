@@ -3,7 +3,6 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/hipeday/upay/internal/routes/response"
-	"github.com/hipeday/upay/internal/service"
 	"github.com/jmoiron/sqlx"
 	"net/http"
 )
@@ -22,6 +21,6 @@ func (h HeartbeatRoute) Register(engine *gin.Engine, middlewares ...gin.HandlerF
 	})
 }
 
-func (h HeartbeatRoute) Setup(service *service.Service) {
+func (h HeartbeatRoute) Setup() {
 
 }
