@@ -13,5 +13,10 @@ declare module "styled-components" {
       primary: string;
       secondary: string;
     };
+    fontSizes: {
+      primary: string;
+      mobilePrimary: string;
+      miniMobilePrimary: string;
+    };
   }
 }

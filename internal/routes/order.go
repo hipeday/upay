@@ -118,7 +118,7 @@ func (o OrderRoute) sync(orderId int64) {
 				if err != nil {
 					log.Fatal(err)
 				}
-				if transaction.Type == "Transfer" && transaction.To == current.ToAddress && amount == current.Amount {
+				if transaction.Type == "Transfer" && transaction.To == current.ToAddress && amount == current.Amount && transaction.BlockTimestamp > current.CreateAt.UnixMilli() {
 					current.Status = "confirmed"
 					current.FromAddress = &transaction.From
 					unix := time.UnixMilli(transaction.BlockTimestamp)

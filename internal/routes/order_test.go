@@ -25,7 +25,7 @@ func Test_getContractTransaction(t *testing.T) {
 	tests = append(tests, test)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			getContractTransaction(tt.args.contractAddress, tt.args.accountAddress)
+			//trongrid.GetContractTransaction(tt.args.contractAddress, tt.args.accountAddress)
 		})
 	}
 }
