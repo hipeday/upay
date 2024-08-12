@@ -1,14 +1,12 @@
 package service
 
 import (
-	"github.com/hipeday/upay/internal/constants"
 	errors2 "github.com/hipeday/upay/internal/errors"
-	"github.com/hipeday/upay/internal/middleware"
 	"github.com/hipeday/upay/internal/repository"
 	"github.com/hipeday/upay/internal/routes/request"
 	"github.com/hipeday/upay/internal/routes/response"
 	"github.com/hipeday/upay/pkg/util"
-	"time"
+	token2 "github.com/hipeday/upay/pkg/util/token"
 )
 
 type AccountServiceImpl struct {
@@ -47,16 +45,19 @@ func (a *AccountServiceImpl) SignIn(payload request.SignInPayload) (*response.Si
 		return nil, errors2.NewIllegalArgumentError("username or password error")
 	}
 
-	var expiresAt = time.Minute * constants.TokenValidityPeriod
-
-	// generate token
-	token, err := util.GenerateToken(account.ID, account.Secret, &expiresAt)
+	// generate access token
+	accessToken, expiresAt, err := token2.GenerateAccessToken()
 	if err != nil {
 		return nil, err
 	}
 
-	// 添加Token缓存
-	middleware.TokenStoreCache.SetToken(token, account.Secret)
+	// generate refresh token
+	refreshToken, err := token2.GenerateRefreshToken()
+	if err != nil {
+		return nil, err
+	}
 
-	return &response.SignIn{AccessToken: token}, nil
+	// save tokens
+
+	return &response.SignIn{AccessToken: accessToken, RefreshToken: refreshToken}, nil
 }

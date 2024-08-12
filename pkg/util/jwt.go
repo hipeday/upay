@@ -1,6 +1,8 @@
 package util
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 	"time"
@@ -61,4 +63,22 @@ func GenerateToken(accountId int64, secret string, expiresAt *time.Duration) (st
 	tokenString, err := token.SignedString([]byte(secret))
 
 	return tokenString, err
+}
+
+// GenerateRefreshToken 生成一个长度为 32 字节的随机 refresh token
+func GenerateRefreshToken() (string, error) {
+	// 32 字节的随机数
+	tokenLength := 32
+	token := make([]byte, tokenLength)
+
+	// 生成随机字节
+	_, err := rand.Read(token)
+	if err != nil {
+		return "", err
+	}
+
+	// 使用 base64 编码生成 refresh token
+	refreshToken := base64.URLEncoding.EncodeToString(token)
+
+	return refreshToken, nil
 }

@@ -1,6 +1,6 @@
 package constants
 
 const (
-	// TokenValidityPeriod 时间以分为单位
-	TokenValidityPeriod = 15
+	// TokenValidityPeriod 时间以时为单位
+	TokenValidityPeriod = 1
 )

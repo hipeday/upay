@@ -21,7 +21,7 @@ func (a *AccountRepositoryImpl) TableName() string {
 }
 
 func (a *AccountRepositoryImpl) Columns() []string {
-	return []string{"id", "username", "password", "status", "secret", "create_at"}
+	return []string{"id", "username", "password", "email", "status", "secret", "create_at"}
 }
 
 func (a *AccountRepositoryImpl) Columns2Query() string {

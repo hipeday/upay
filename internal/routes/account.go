@@ -50,7 +50,7 @@ func (a *AccountRoute) signIn(c *gin.Context) {
 		panic(errors.NewIllegalArgumentError(err.Error()))
 	}
 
-	logging.Logger().Debugf("SignIn payload: %+v", payload)
+	logging.Logger().Debugf("[Console Restful] - API 'POST /signin' payload: %+v", payload)
 
 	signIn, err := a.service.SignIn(payload)
 	if err != nil {
