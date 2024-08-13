@@ -24,6 +24,10 @@ func (a *AccountRepositoryImpl) Columns() []string {
 	return []string{"id", "username", "password", "email", "status", "secret", "create_at"}
 }
 
+func (a *AccountRepositoryImpl) GetDB() *sqlx.DB {
+	return a.db
+}
+
 func (a *AccountRepositoryImpl) Columns2Query() string {
 	columns := a.Columns()
 	var columns2Query string

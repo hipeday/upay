@@ -1,19 +1,21 @@
 package service
 
 import (
+	"github.com/hipeday/upay/internal/entities"
 	errors2 "github.com/hipeday/upay/internal/errors"
 	"github.com/hipeday/upay/internal/repository"
 	"github.com/hipeday/upay/internal/routes/request"
 	"github.com/hipeday/upay/internal/routes/response"
 	"github.com/hipeday/upay/pkg/util"
 	token2 "github.com/hipeday/upay/pkg/util/token"
+	"time"
 )
 
 type AccountServiceImpl struct {
-	repository repository.Repository
+	repository repository.AccountRepository
 }
 
-func (a *AccountServiceImpl) Setup(repository repository.Repository) {
+func (a *AccountServiceImpl) Setup(repository repository.AccountRepository) {
 	a.repository = repository
 }
 
@@ -58,6 +60,23 @@ func (a *AccountServiceImpl) SignIn(payload request.SignInPayload) (*response.Si
 	}
 
 	// save tokens
+	tokenRepositoryImpl := new(repository.TokenRepositoryImpl)
+	tokenRepositoryImpl.Setup(accountRepository.GetDB())
+	now := time.Now()
+	err = tokenRepositoryImpl.Insert(&entities.Token{
+		Entity: entities.Entity{
+			ID:       0,
+			CreateAt: &now,
+		},
+		TargetId:     account.ID,
+		Type:         entities.AccountTokenType,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		ExpiresAt:    &expiresAt,
+	})
+	if err != nil {
+		return nil, err
+	}
 
 	return &response.SignIn{AccessToken: accessToken, RefreshToken: refreshToken}, nil
 }

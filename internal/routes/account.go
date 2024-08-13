@@ -12,18 +12,18 @@ import (
 )
 
 type AccountRoute struct {
-	service service.Service
+	IAccountRoute
+	service service.AccountService
 }
 
 func setupAccount(db *sqlx.DB, engine *gin.Engine) {
 	accountRepository := repository.AccountRepositoryImpl{}
 	accountRepository.Setup(db)
 
-	accountService := service.AccountServiceImpl{}
-	accountService.Setup(&accountRepository)
+	var accountService service.AccountService = new(service.AccountServiceImpl)
 
 	route := AccountRoute{}
-	route.Setup(&accountService)
+	route.Setup(accountService)
 	route.Register(engine)
 }
 
@@ -32,7 +32,7 @@ func (a *AccountRoute) Register(engine *gin.Engine, middlewares ...gin.HandlerFu
 	whitelist.POST(signin, a.signIn)
 }
 
-func (a *AccountRoute) Setup(service service.Service) {
+func (a *AccountRoute) Setup(service service.AccountService) {
 	a.service = service
 }
 

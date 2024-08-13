@@ -10,9 +10,13 @@ import (
 	"strconv"
 )
 
-type Route interface {
+type Route[S service.Service] interface {
 	Register(engine *gin.Engine, middlewares ...gin.HandlerFunc)
-	Setup(service service.Service)
+	Setup(service S)
+}
+
+type IAccountRoute interface {
+	Route[service.AccountService]
 }
 
 func SetupRouter(db *sqlx.DB, cfg config.Config) {

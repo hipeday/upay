@@ -18,7 +18,8 @@ create table token(
     type varchar(16) not null comment 'token类型 account: 管理员账户, 商户: merchants',
     access_token text not null comment '访问token令牌',
     refresh_token text not null comment '刷新token令牌',
-    expires_at datetime not null comment '刷新token令牌过期时间 如果勾选记住我默认将refresh_token设置为7天过期'
+    expires_at datetime comment '刷新token令牌过期时间 如果为空则不会过期',
+    create_at datetime default now() not null comment '创建时间'
 ) comment '用户Token令牌表';
 
 # 初始管理员账号密码 admin 123456
