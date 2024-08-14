@@ -3,21 +3,11 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/hipeday/upay/internal/middleware"
-	"github.com/hipeday/upay/internal/service"
 	"github.com/hipeday/upay/pkg/config"
 	"github.com/jmoiron/sqlx"
 	"log"
 	"strconv"
 )
-
-type Route[S service.Service] interface {
-	Register(engine *gin.Engine, middlewares ...gin.HandlerFunc)
-	Setup(service S)
-}
-
-type IAccountRoute interface {
-	Route[service.AccountService]
-}
 
 func SetupRouter(db *sqlx.DB, cfg config.Config) {
 	gin.SetMode(cfg.Server.Mode)

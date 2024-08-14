@@ -5,15 +5,12 @@ import (
 	"github.com/hipeday/upay/cmd/server"
 	"io"
 	"net/http"
-	"sync"
 )
 
 const sandboxDomain = "https://nile.trongrid.io"
 
 const getAccountInfoPath = "/v1/accounts/%v"
 const getContractTransactionPath = "/v1/accounts/%v/transactions/trc20"
-
-var once sync.Once
 
 func main() {
 	// setup server

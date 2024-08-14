@@ -11,7 +11,7 @@ func ErrorMiddleware() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		defer func() {
 			if r := recover(); r != nil {
-				logging.Logger().Error(fmt.Sprintf("Panic: %v", r))
+				logging.Logger().Errorf("System exception interception: %v", r)
 				respondWithError(context, handleError(r))
 			}
 		}()
@@ -22,6 +22,8 @@ func ErrorMiddleware() gin.HandlerFunc {
 func handleError(r interface{}) errors.Errors {
 	switch e := r.(type) {
 	case errors.IllegalArgumentError:
+		return e
+	case errors.UnauthorizedError:
 		return e
 	default:
 		// 处理未知的panic

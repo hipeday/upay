@@ -9,8 +9,8 @@ import (
 
 func InitMySQL(cfg config.Config) (*sqlx.DB, error) {
 	mysqlCfg := cfg.Database.MySQL
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true",
-		mysqlCfg.Username, mysqlCfg.Password, mysqlCfg.Host, mysqlCfg.Port, mysqlCfg.Database)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=%t&loc=%s",
+		mysqlCfg.Username, mysqlCfg.Password, mysqlCfg.Host, mysqlCfg.Port, mysqlCfg.Database, mysqlCfg.ParseTime, mysqlCfg.TimeZone)
 	db, err := sqlx.Connect("mysql", dsn)
 	if err != nil {
 		return nil, err

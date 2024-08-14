@@ -12,6 +12,7 @@ import (
 )
 
 type AccountServiceImpl struct {
+	AccountService
 	repository repository.AccountRepository
 }
 
@@ -59,11 +60,11 @@ func (a *AccountServiceImpl) SignIn(payload request.SignInPayload) (*response.Si
 		return nil, err
 	}
 
-	// save tokens
-	tokenRepositoryImpl := new(repository.TokenRepositoryImpl)
-	tokenRepositoryImpl.Setup(accountRepository.GetDB())
+	// save tokens If the data already exists for the current account, it should be overwritten
+	tokenService := GetTokenServiceInstance(accountRepository.GetDB())
+
 	now := time.Now()
-	err = tokenRepositoryImpl.Insert(&entities.Token{
+	token := entities.Token{
 		Entity: entities.Entity{
 			ID:       0,
 			CreateAt: &now,
@@ -73,10 +74,11 @@ func (a *AccountServiceImpl) SignIn(payload request.SignInPayload) (*response.Si
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		ExpiresAt:    &expiresAt,
-	})
+	}
+	err = tokenService.Save(&token)
 	if err != nil {
 		return nil, err
 	}
 
-	return &response.SignIn{AccessToken: accessToken, RefreshToken: refreshToken}, nil
+	return &response.SignIn{AccessToken: accessToken, RefreshToken: refreshToken, ExpiresIn: expiresAt.UnixMilli() - time.Now().UnixMilli()}, nil
 }

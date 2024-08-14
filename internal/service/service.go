@@ -2,15 +2,21 @@ package service
 
 import (
 	"github.com/hipeday/upay/internal/repository"
-	"github.com/hipeday/upay/internal/routes/request"
-	"github.com/hipeday/upay/internal/routes/response"
+	"github.com/jmoiron/sqlx"
 )
 
-type Service interface {
-	AccountService
-	Setup(repository repository.Repository)
+func GetTokenServiceInstance(db *sqlx.DB) TokenService {
+	var tokenService TokenService = new(TokenServiceImpl)
+	var tokenRepository repository.TokenRepository = new(repository.TokenRepositoryImpl)
+	tokenRepository.Setup(db)
+	tokenService.Setup(tokenRepository)
+	return tokenService
 }
 
-type AccountService interface {
-	SignIn(payload request.SignInPayload) (*response.SignIn, error)
+func GetAccountServiceInstance(db *sqlx.DB) AccountService {
+	var accountService AccountService = new(AccountServiceImpl)
+	var accountRepository repository.AccountRepository = new(repository.AccountRepositoryImpl)
+	accountRepository.Setup(db)
+	accountService.Setup(accountRepository)
+	return accountService
 }

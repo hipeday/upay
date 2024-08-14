@@ -3,7 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-co-op/gocron/v2"
-	"github.com/hipeday/upay/internal/service"
+	"github.com/hipeday/upay/internal/middleware"
 	"github.com/hipeday/upay/internal/web3/trc20/trongrid"
 	"github.com/jmoiron/sqlx"
 	"log"
@@ -32,7 +32,8 @@ type OrderRoute struct {
 func setupOrder(db *sqlx.DB, engine *gin.Engine) {
 	route := OrderRoute{}
 	route.orders = make(map[int64]Order)
-	route.Register(engine)
+	// register auth api
+	route.Register(engine, middleware.RequestLoggingMiddleware(), middleware.BearerAuthorizationMiddleware())
 }
 
 func (o OrderRoute) Register(engine *gin.Engine, middlewares ...gin.HandlerFunc) {
@@ -40,11 +41,6 @@ func (o OrderRoute) Register(engine *gin.Engine, middlewares ...gin.HandlerFunc)
 	routes := routerGroup.Use(middlewares...)
 	routes.POST("", o.create)
 	routes.GET("", o.get)
-}
-
-func (o OrderRoute) Setup(service *service.Service) {
-	//TODO implement me
-	panic("implement me")
 }
 
 // create 创建支付订单

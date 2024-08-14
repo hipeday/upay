@@ -12,9 +12,14 @@ import (
 )
 
 type Config struct {
-	Database *Database `yaml:"database"`
-	Server   *Server   `yaml:"server"`
-	Logger   *Logging  `yaml:"logger"`
+	Application *Application `yaml:"application"`
+	Database    *Database    `yaml:"database"`
+	Server      *Server      `yaml:"server"`
+	Logger      *Logging     `yaml:"logger"`
+}
+
+type Application struct {
+	TimeZone string `yaml:"time_zone"`
 }
 
 type Database struct {
@@ -22,11 +27,13 @@ type Database struct {
 }
 
 type MySQL struct {
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
-	Database string `yaml:"database"`
-	Host     string `yaml:"host"`
-	Port     int16  `yaml:"port"`
+	Username  string `yaml:"username"`
+	Password  string `yaml:"password"`
+	Database  string `yaml:"database"`
+	Host      string `yaml:"host"`
+	Port      int16  `yaml:"port"`
+	ParseTime bool   `yaml:"parse_time"`
+	TimeZone  string `yaml:"time_zone"`
 }
 
 type Server struct {

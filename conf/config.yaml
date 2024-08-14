@@ -1,3 +1,5 @@
+application:
+  time_zone: Asia/Shanghai
 database:
   mysql:
     host: 127.0.0.1
@@ -5,6 +7,9 @@ database:
     username: your_user
     password: your_password
     database: upay
+    parse_time: true
+    # use urlencoding 'Asia/Shanghai'
+    time_zone: Asia%2FShanghai
 server:
   port: 3000
   ip: 0.0.0.0

@@ -2,29 +2,8 @@ package repository
 
 import (
 	"fmt"
-	"github.com/hipeday/upay/internal/entities"
-	"github.com/jmoiron/sqlx"
 	"strings"
 )
-
-type Repository interface {
-	Setup(db *sqlx.DB)
-	TableName() string
-	Columns() []string
-	Columns2Query() string
-	GetDB() *sqlx.DB
-}
-
-type AccountRepository interface {
-	Repository
-	SelectAccountByUsername(username string) (*entities.Account, error)
-	SelectSignIn(username string, password string) (*entities.Account, error)
-}
-
-type TokenRepository interface {
-	Repository
-	Insert(*entities.Token) error
-}
 
 const (
 	insertSqlTemplate = "INSERT INTO %s (%s) VALUES (%s)"
@@ -36,4 +15,35 @@ func getInsertSql(tableName, columns string, columnCount int) string {
 		placeholder = append(placeholder, "?")
 	}
 	return fmt.Sprintf(insertSqlTemplate, tableName, columns, strings.Join(placeholder, ","))
+}
+
+func getUpdateSql(tableName string, updateParameters []string, whereParameters []string) string {
+	var (
+		updates   []string
+		wheres    []string
+		sourceSql = "UPDATE %s SET %s"
+	)
+	if len(updateParameters) > 0 {
+		for _, param := range updateParameters {
+			updates = append(updates, param+" = ?")
+		}
+	}
+
+	if len(whereParameters) > 0 {
+		sourceSql += " WHERE %s"
+		for _, param := range whereParameters {
+			wheres = append(wheres, param+" = ?")
+		}
+	}
+	return fmt.Sprintf(sourceSql, tableName, strings.Join(updates, ", "), strings.Join(wheres, " AND "))
+}
+
+func getQuerySql(tableName, columns string, parameters []string) string {
+	var wheres []string
+	if len(parameters) > 0 {
+		for _, param := range parameters {
+			wheres = append(wheres, param+" = ?")
+		}
+	}
+	return fmt.Sprintf("SELECT %s FROM %s WHERE %s", columns, tableName, strings.Join(wheres, " AND "))
 }

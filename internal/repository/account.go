@@ -9,6 +9,7 @@ import (
 )
 
 type AccountRepositoryImpl struct {
+	AccountRepository
 	db *sqlx.DB
 }
 
