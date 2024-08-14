@@ -25,4 +25,5 @@ type TokenService interface {
 type SettingsService interface {
 	Service[repository.SettingsRepository]
 	Save(payload request.SaveSettingsPayload) (*response.SaveSettings, error)
+	ModifyByConfigKey(payload request.SaveSettingsPayload) (*response.SaveSettings, error)
 }

@@ -26,7 +26,7 @@ func (s *SettingsServiceImpl) Save(payload request.SaveSettingsPayload) (*respon
 		return nil, err
 	}
 	if settings != nil {
-		return nil, errors2.NewConflictErrorError(fmt.Sprintf("settings %s already exists", payload.Config))
+		return nil, errors2.NewConflictError(fmt.Sprintf("settings %s already exists", payload.Config))
 	}
 	now := time.Now()
 	savedSettings := entities.Settings{
@@ -44,6 +44,43 @@ func (s *SettingsServiceImpl) Save(payload request.SaveSettingsPayload) (*respon
 	}
 
 	err = settingsRepository.Insert(savedSettings)
+	if err != nil {
+		return nil, err
+	}
+	return &response.SaveSettings{
+		Config:      savedSettings.Config,
+		Name:        savedSettings.Name,
+		Value:       savedSettings.Value,
+		Type:        savedSettings.Type,
+		Required:    savedSettings.Required,
+		Description: savedSettings.Description,
+	}, nil
+}
+
+func (s *SettingsServiceImpl) ModifyByConfigKey(payload request.SaveSettingsPayload) (*response.SaveSettings, error) {
+	settingsRepository := s.repository
+	settings, err := settingsRepository.SelectByConfig(payload.Config)
+	if err != nil {
+		return nil, err
+	}
+	if settings == nil {
+		return nil, errors2.NewNotFoundError(fmt.Sprintf("settings %s doesn't exists", payload.Config))
+	}
+	savedSettings := entities.Settings{
+		Entity: entities.Entity{
+			ID:       settings.ID,
+			CreateAt: settings.CreateAt,
+		},
+		Config:      payload.Config,
+		Name:        payload.Name,
+		Value:       payload.Value,
+		Required:    payload.Required,
+		Type:        payload.Type,
+		Description: payload.Description,
+		ModifiedBy:  payload.OperatorId,
+	}
+
+	err = settingsRepository.UpdateById(&savedSettings)
 	if err != nil {
 		return nil, err
 	}

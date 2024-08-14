@@ -30,5 +30,6 @@ type TokenRepository interface {
 type SettingsRepository interface {
 	Repository
 	Insert(entities.Settings) error
+	UpdateById(*entities.Settings) error
 	SelectByConfig(string) (*entities.Settings, error)
 }

@@ -40,6 +40,13 @@ func (s *SettingsRepositoryImpl) Insert(settings entities.Settings) error {
 	return tx.Commit()
 }
 
+func (s *SettingsRepositoryImpl) UpdateById(settings *entities.Settings) error {
+	db := s.db
+	tx := db.MustBegin()
+	tx.MustExec(getUpdateSql(s.TableName(), []string{"config", "name", "value", "required", "type", "description", "modified_by", "create_at"}, []string{"id"}), settings.Config, settings.Name, settings.Value, settings.Required, settings.Type, settings.Description, settings.ModifiedBy, settings.CreateAt, settings.ID)
+	return tx.Commit()
+}
+
 func (s *SettingsRepositoryImpl) SelectByConfig(configKey string) (*entities.Settings, error) {
 	db := s.db
 	var settings entities.Settings

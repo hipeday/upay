@@ -24,6 +24,6 @@ func (u ConflictError) RuntimeError() {
 	panic(u.message)
 }
 
-func NewConflictErrorError(message string) Errors {
+func NewConflictError(message string) Errors {
 	return ConflictError{status: http.StatusConflict, message: message}
 }

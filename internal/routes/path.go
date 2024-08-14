@@ -20,5 +20,6 @@ const (
 
 // settings routing paths
 const (
-	addSettings = "/settings"
+	addSettings    = "/settings"
+	modifySettings = "/settings"
 )

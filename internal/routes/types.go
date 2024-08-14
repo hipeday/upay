@@ -19,4 +19,5 @@ type AccountRoute interface {
 type SettingsRoute interface {
 	Route[repository.SettingsRepository, service.SettingsService]
 	save(c *gin.Context)
+	modify(c *gin.Context)
 }
