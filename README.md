@@ -25,5 +25,9 @@
 ## Quick Start
 
 ```
-
+创建订单(生成订单信息 - waiting_confirm) -> 确认订单(绑定订单相关支付信息 - waiting_payment)
+                                            1. 支付成功(更新订单支付信息 - sucessful)
+                                            2. 支付失败(超时未支付 - timeout)
+                                            3. 取消订单(手动取消订单 - revoke)
+保存revoke原因 close_time(支付成功也是一种关闭所以支付成功也存储在这里) 和其它的一些在区块链上的源信息                           
 ```
