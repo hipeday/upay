@@ -3,9 +3,9 @@ package repository
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"github.com/hipeday/upay/internal/entities"
 	"github.com/jmoiron/sqlx"
+	"strings"
 )
 
 type TokenRepositoryImpl struct {
@@ -21,7 +21,7 @@ func (t *TokenRepositoryImpl) TableName() string {
 }
 
 func (t *TokenRepositoryImpl) Columns() []string {
-	return []string{"id", "target_id", "type", "access_token", "refresh_token", "expires_at", "create_at"}
+	return getColumns(entities.Token{})
 }
 
 func (t *TokenRepositoryImpl) GetDB() *sqlx.DB {
@@ -29,22 +29,13 @@ func (t *TokenRepositoryImpl) GetDB() *sqlx.DB {
 }
 
 func (t *TokenRepositoryImpl) Columns2Query() string {
-	columns := t.Columns()
-	var columns2Query string
-	for i, column := range columns {
-		if i == 0 {
-			columns2Query = column
-		} else {
-			columns2Query = fmt.Sprintf("%s, %s", columns2Query, column)
-		}
-	}
-	return columns2Query
+	return strings.Join(t.Columns(), ", ")
 }
 
 func (t *TokenRepositoryImpl) Insert(token *entities.Token) error {
 	db := t.db
 	tx := db.MustBegin()
-	tx.MustExec(getInsertSql(t.TableName(), t.Columns2Query(), len(t.Columns())), nil, token.TargetId, token.Type, token.AccessToken, token.RefreshToken, token.ExpiresAt, token.CreateAt)
+	tx.MustExec(getInsertSql(t.TableName(), t.Columns2Query(), len(t.Columns())), nil, token.CreateAt, token.TargetId, token.Type, token.AccessToken, token.RefreshToken, token.ExpiresAt)
 	return tx.Commit()
 }
 

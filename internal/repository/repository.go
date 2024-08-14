@@ -2,12 +2,43 @@ package repository
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 )
 
 const (
 	insertSqlTemplate = "INSERT INTO %s (%s) VALUES (%s)"
 )
+
+func getColumns(obj interface{}) []string {
+	// 获取对象的反射类型
+	val := reflect.ValueOf(obj)
+
+	// 如果传入的是指针，获取指针指向的值
+	if val.Kind() == reflect.Ptr {
+		val = val.Elem()
+	}
+
+	var tags []string
+
+	// 遍历结构体的字段
+	for i := 0; i < val.NumField(); i++ {
+		field := val.Type().Field(i)
+
+		// 如果字段是嵌入的结构体，递归获取嵌入结构体的字段标签
+		if field.Anonymous {
+			tags = append(tags, getColumns(val.Field(i).Interface())...)
+		} else {
+			// 获取 `db` 标签的值
+			tag := field.Tag.Get("db")
+			if tag != "" {
+				tags = append(tags, tag)
+			}
+		}
+	}
+
+	return tags
+}
 
 func getInsertSql(tableName, columns string, columnCount int) string {
 	var placeholder []string

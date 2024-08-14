@@ -20,3 +20,11 @@ func GetAccountServiceInstance(db *sqlx.DB) AccountService {
 	accountService.Setup(accountRepository)
 	return accountService
 }
+
+func GetSettingsServiceInstance(db *sqlx.DB) SettingsService {
+	var settingsService SettingsService = new(SettingsServiceImpl)
+	var settingsRepository repository.SettingsRepository = new(repository.SettingsRepositoryImpl)
+	settingsRepository.Setup(db)
+	settingsService.Setup(settingsRepository)
+	return settingsService
+}

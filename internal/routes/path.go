@@ -17,3 +17,8 @@ const (
 const (
 	signin = "/signin"
 )
+
+// settings routing paths
+const (
+	addSettings = "/settings"
+)

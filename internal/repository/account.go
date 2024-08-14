@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/hipeday/upay/internal/entities"
 	"github.com/jmoiron/sqlx"
+	"strings"
 )
 
 type AccountRepositoryImpl struct {
@@ -22,7 +23,7 @@ func (a *AccountRepositoryImpl) TableName() string {
 }
 
 func (a *AccountRepositoryImpl) Columns() []string {
-	return []string{"id", "username", "password", "email", "status", "secret", "create_at"}
+	return getColumns(entities.Account{})
 }
 
 func (a *AccountRepositoryImpl) GetDB() *sqlx.DB {
@@ -30,16 +31,7 @@ func (a *AccountRepositoryImpl) GetDB() *sqlx.DB {
 }
 
 func (a *AccountRepositoryImpl) Columns2Query() string {
-	columns := a.Columns()
-	var columns2Query string
-	for i, column := range columns {
-		if i == 0 {
-			columns2Query = column
-		} else {
-			columns2Query = fmt.Sprintf("%s, %s", columns2Query, column)
-		}
-	}
-	return columns2Query
+	return strings.Join(a.Columns(), ", ")
 }
 
 func (a *AccountRepositoryImpl) SelectAccountByUsername(username string) (*entities.Account, error) {

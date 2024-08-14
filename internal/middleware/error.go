@@ -25,6 +25,8 @@ func handleError(r interface{}) errors.Errors {
 		return e
 	case errors.UnauthorizedError:
 		return e
+	case errors.ConflictError:
+		return e
 	default:
 		// 处理未知的panic
 		return errors.NewInternalServerError(fmt.Sprintf("Unknown error: %v", r))

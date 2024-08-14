@@ -28,9 +28,11 @@ insert into account (id, username, password, email, status, secret, create_at) v
 create table settings(
     id bigint primary key auto_increment comment '主键id',
     config varchar(64) not null comment '配置key',
-    name varchar(64) not null comment '配置显示名称',
+    name varchar(64) comment '配置显示名称',
     value text default null comment '配置值',
+    required tinyint(1) default false not null comment '值是否必填',
     type varchar(16) not null comment '数据类型',
     description text default null comment '描述',
-    modified_by bigint not null comment '-1为系统创建'
+    modified_by bigint not null comment '-1为系统创建',
+    create_at datetime default now() not null comment '创建时间'
 ) comment '系统设置';

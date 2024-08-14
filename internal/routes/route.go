@@ -23,5 +23,6 @@ func SetupRouter(db *sqlx.DB, cfg config.Config) {
 func setup(db *sqlx.DB, engine *gin.Engine) {
 	setupHeartbeat(db, engine)
 	setupAccount(db, engine)
+	setupSettings(db, engine)
 	setupOrder(db, engine)
 }

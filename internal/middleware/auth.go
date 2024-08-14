@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/hipeday/upay/internal/constants/http"
 	"github.com/hipeday/upay/internal/errors"
 	"github.com/hipeday/upay/internal/logging"
 	"github.com/hipeday/upay/internal/repository"
@@ -58,8 +59,8 @@ func BearerAuthorizationMiddleware() gin.HandlerFunc {
 			panic(errors.NewUnauthorizedError("Unauthorized"))
 		}
 
-		context.Set("account_id", tokenEntity.ID)
-		context.Set("token", token)
+		context.Set(http.AccountIdContext, tokenEntity.TargetId)
+		context.Set(http.AccountTokenContext, token)
 
 		logging.Logger().Debugf("Verification authentication passed. Add attribute account_id: %d token: %s to context", tokenEntity.ID, token)
 

@@ -66,10 +66,10 @@ func (a *AccountServiceImpl) SignIn(payload request.SignInPayload) (*response.Si
 	now := time.Now()
 	token := entities.Token{
 		Entity: entities.Entity{
-			ID:       0,
+			ID:       nil,
 			CreateAt: &now,
 		},
-		TargetId:     account.ID,
+		TargetId:     *account.ID,
 		Type:         entities.AccountTokenType,
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,

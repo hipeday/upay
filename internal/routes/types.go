@@ -11,11 +11,12 @@ type Route[R repository.Repository, S service.Service[R]] interface {
 	Setup(service S)
 }
 
-type IAccountRoute interface {
+type AccountRoute interface {
 	Route[repository.AccountRepository, service.AccountService]
 	signIn(c *gin.Context)
 }
 
-type AccountRoute struct {
-	service service.AccountService
+type SettingsRoute interface {
+	Route[repository.SettingsRepository, service.SettingsService]
+	save(c *gin.Context)
 }

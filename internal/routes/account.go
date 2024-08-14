@@ -10,24 +10,29 @@ import (
 	"net/http"
 )
 
-func (a *AccountRoute) Register(engine *gin.Engine, middlewares ...gin.HandlerFunc) {
+type AccountRouteImpl struct {
+	AccountRoute
+	service service.AccountService
+}
+
+func (a *AccountRouteImpl) Register(engine *gin.Engine, middlewares ...gin.HandlerFunc) {
 	whitelist := engine.Group("", middlewares...)
 	whitelist.POST(signin, a.signIn)
 }
 
-func (a *AccountRoute) Setup(service service.AccountService) {
+func (a *AccountRouteImpl) Setup(service service.AccountService) {
 	a.service = service
 }
 
 func setupAccount(db *sqlx.DB, engine *gin.Engine) {
 	serviceInstance := service.GetAccountServiceInstance(db)
-	var route IAccountRoute = new(AccountRoute)
+	var route AccountRoute = new(AccountRouteImpl)
 	route.Setup(serviceInstance)
 	route.Register(engine, middleware.RequestLoggingMiddleware())
 }
 
 // signIn 登录
-func (a *AccountRoute) signIn(c *gin.Context) {
+func (a *AccountRouteImpl) signIn(c *gin.Context) {
 	var (
 		payload request.SignInPayload
 	)

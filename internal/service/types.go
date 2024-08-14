@@ -21,3 +21,8 @@ type TokenService interface {
 	Save(token *entities.Token) error
 	IsValidToken(token string) (*entities.Token, bool, error)
 }
+
+type SettingsService interface {
+	Service[repository.SettingsRepository]
+	Save(payload request.SaveSettingsPayload) (*response.SaveSettings, error)
+}

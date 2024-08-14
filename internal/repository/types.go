@@ -26,3 +26,9 @@ type TokenRepository interface {
 	SelectByTargetId(targetId int64, tokenType entities.TokenType) (*entities.Token, error)
 	SelectByAccessToken(accessToken string) (*entities.Token, error)
 }
+
+type SettingsRepository interface {
+	Repository
+	Insert(entities.Settings) error
+	SelectByConfig(string) (*entities.Settings, error)
+}
